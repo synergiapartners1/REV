@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Revenue Enablement Health Check | Synergia Partners</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,400..600&family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --ink:#121826;
+  --paper:#E6E9E3;
+  --card:#FBFAF6;
+  --accent:#34507A;
+  --accent-deep:#24395A;
+  --accent-soft:#CCD6E4;
+  --text:#191F26;
+  --text-muted:#5C6470;
+  --text-on-ink:#EDEEE7;
+  --text-on-ink-muted:#A9AFB9;
+  --line:#D4D7CD;
+  --line-on-ink:#33405A;
+  --band-foundational:#A45A3C;
+  --band-scaling:#B9892E;
+  --band-optimized:#2F6E5C;
+  --radius:10px;
+  --shadow: 0 1px 2px rgba(18,24,38,0.04), 0 8px 24px -12px rgba(18,24,38,0.18);
+}
+
+*{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--text);
+  font-family:'Public Sans', system-ui, sans-serif;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{ font-family:'IBM Plex Mono', monospace; letter-spacing:0.04em; }
+h1,h2,h3{ font-family:'Newsreader', Georgia, serif; font-weight:500; margin:0; color:inherit; }
+
+#app{ min-height:100vh; }
+
+/* ---------- topbar ---------- */
+.topbar{ background:var(--ink); border-bottom:1px solid var(--line-on-ink); position:sticky; top:0; z-index:50; }
+.topbar-inner{ max-width:760px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+@media (max-width:540px){ .topbar-inner{ padding:12px 16px; } }
+.wordmark{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; font-weight:600; letter-spacing:0.16em; color:var(--text-on-ink); text-transform:uppercase; }
+.wordmark span{ color:var(--accent); }
+.topbar-tag{ font-size:11px; color:var(--text-on-ink-muted); letter-spacing:0.06em; font-family:'IBM Plex Mono', monospace; }
+
+/* ---------- score rail ---------- */
+.score-rail{ position:sticky; top:49px; z-index:40; background:rgba(230,233,227,0.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); }
+@media (max-width:540px){ .score-rail{ top:45px; } }
+.score-rail-inner{ max-width:760px; margin:0 auto; padding:10px 24px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+@media (max-width:540px){ .score-rail-inner{ padding:9px 16px; } }
+.score-rail-label{ font-size:12px; color:var(--text-muted); }
+.score-rail-val{ font-family:'IBM Plex Mono', monospace; font-size:13px; font-weight:600; color:var(--accent-deep); }
+.score-dots{ display:flex; gap:5px; }
+.score-dot{ width:8px; height:8px; border-radius:50%; background:var(--line); border:1px solid var(--line); transition:background .2s, border-color .2s; }
+.score-dot.on{ background:var(--accent); border-color:var(--accent-deep); }
+
+/* ---------- shell ---------- */
+.shell{ max-width:760px; margin:0 auto; padding:36px 24px 64px; }
+@media (max-width:540px){ .shell{ padding:26px 16px 48px; } }
+
+.eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:12px; }
+h1.title{ font-size:34px; line-height:1.12; margin-bottom:14px; }
+@media (max-width:540px){ h1.title{ font-size:27px; } }
+.subhead{ font-size:15.5px; color:var(--text-muted); max-width:58ch; margin-bottom:6px; }
+
+.instructions{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; margin:22px 0 28px; font-size:13.5px; color:var(--text-muted); box-shadow:var(--shadow); }
+.instructions b{ color:var(--text); font-weight:600; }
+
+.field{ margin-bottom:30px; }
+.field label{ display:block; font-size:12.5px; font-weight:600; color:var(--text-muted); margin-bottom:7px; letter-spacing:0.01em; }
+.field input, .field select{ width:100%; padding:11px 13px; border-radius:8px; border:1px solid var(--line); background:var(--card); font-family:inherit; font-size:14.5px; color:var(--text); appearance:none; -webkit-appearance:none; }
+.field select{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235C6470' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 13px center; padding-right:36px; }
+.field input:focus, .field select:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+.field-hint{ font-size:12px; color:var(--text-muted); margin-top:6px; }
+.field-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media (max-width:540px){ .field-row{ grid-template-columns:1fr; } }
+
+.company-card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px 22px 6px; margin-bottom:28px; box-shadow:var(--shadow); }
+.company-card-title{ font-size:12.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-muted); margin-bottom:18px; }
+
+.category-badge{ display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:11px; font-weight:600; letter-spacing:0.04em; color:var(--accent-deep); background:var(--accent-soft); padding:5px 11px; border-radius:999px; margin-bottom:16px; }
+
+/* ---------- capability cards ---------- */
+.cap-list{ display:flex; flex-direction:column; gap:12px; margin-bottom:8px; }
+.cap-card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px 18px; box-shadow:var(--shadow); }
+.cap-top{ display:flex; align-items:flex-start; gap:10px; margin-bottom:14px; }
+.cap-num{ font-family:'IBM Plex Mono', monospace; font-size:11px; font-weight:600; color:#fff; background:var(--accent); border-radius:5px; width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+.cap-text{ font-size:15px; color:var(--text); line-height:1.45; }
+.cap-toggle{ display:flex; gap:8px; }
+.toggle-btn{ flex:1; padding:10px 8px; border-radius:7px; border:1px solid var(--line); background:#fff; font-family:'Public Sans', sans-serif; font-size:13px; font-weight:600; color:var(--text-muted); cursor:pointer; transition:all .15s; text-align:center; }
+.toggle-btn:hover{ border-color:var(--accent); }
+.toggle-btn.active-yes{ background:var(--accent); border-color:var(--accent-deep); color:#fff; }
+.toggle-btn.active-no{ background:var(--ink); border-color:var(--ink); color:var(--text-on-ink); }
+.toggle-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+.nudge{ font-size:12.5px; color:var(--band-foundational); margin:14px 2px 0; opacity:0; transition:opacity .2s; }
+.nudge.show{ opacity:1; }
+
+.btn-row{ display:flex; gap:12px; margin-top:30px; }
+.btn{ font-family:'Public Sans', sans-serif; font-weight:600; font-size:14px; padding:13px 22px; border-radius:8px; border:none; cursor:pointer; transition:all .15s; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+.btn-primary{ background:var(--ink); color:var(--text-on-ink); }
+.btn-primary:hover{ background:#000; }
+.btn-primary:disabled{ background:var(--line); color:var(--text-muted); cursor:not-allowed; }
+.btn-ghost{ background:transparent; color:var(--text); border:1px solid var(--line); }
+.btn-ghost:hover{ border-color:var(--accent); color:var(--accent-deep); }
+.btn-ghost-light{ background:transparent; color:var(--text-on-ink); border:1px solid var(--line-on-ink); }
+.btn-ghost-light:hover{ border-color:var(--accent); color:var(--accent); }
+
+/* ---------- results ---------- */
+.results{ display:none; }
+.results.show{ display:block; }
+.results-divider{ border:none; border-top:1px solid var(--line); margin:48px 0 40px; }
+
+.score-hero{ background:var(--ink); border-radius:14px; padding:34px 30px; color:var(--text-on-ink); margin-bottom:28px; }
+@media (max-width:540px){ .score-hero{ padding:26px 20px; } }
+.score-hero-top{ display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
+.score-big{ font-family:'Newsreader', serif; font-size:56px; line-height:1; font-weight:500; }
+@media (max-width:540px){ .score-big{ font-size:44px; } }
+.score-big small{ font-size:22px; color:var(--text-on-ink-muted); font-weight:400; }
+.band-chip{ font-family:'IBM Plex Mono', monospace; font-size:12px; font-weight:600; letter-spacing:0.08em; padding:7px 14px; border-radius:999px; text-transform:uppercase; }
+.band-desc{ font-size:14.5px; color:var(--text-on-ink-muted); line-height:1.55; max-width:56ch; }
+
+.breakdown{ margin-bottom:8px; }
+.breakdown-title{ font-size:12.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; }
+.breakdown-row{ display:flex; align-items:flex-start; gap:10px; padding:11px 0; border-bottom:1px solid var(--line); font-size:14px; }
+.breakdown-row:last-child{ border-bottom:none; }
+.bd-icon{ width:20px; height:20px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; margin-top:1px; }
+.bd-yes{ background:var(--accent-soft); color:var(--accent-deep); }
+.bd-no{ background:#E8E2DD; color:#8A7A6E; }
+.bd-text{ color:var(--text); }
+.bd-text.muted{ color:var(--text-muted); }
+
+.wtm{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:30px 28px; margin-top:36px; box-shadow:var(--shadow); }
+@media (max-width:540px){ .wtm{ padding:24px 20px; } }
+.wtm-title{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; font-weight:700; letter-spacing:0.1em; color:var(--accent-deep); margin-bottom:14px; }
+.wtm-intro{ font-size:15px; color:var(--text); line-height:1.6; margin-bottom:20px; }
+.wtm-list{ display:flex; flex-direction:column; gap:16px; margin-bottom:22px; }
+.wtm-item{ display:flex; gap:13px; }
+.wtm-num{ font-family:'IBM Plex Mono', monospace; font-size:12px; font-weight:700; color:#fff; background:var(--accent); border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.wtm-item-text{ font-size:14.5px; line-height:1.55; color:var(--text); }
+.wtm-item-text b{ color:var(--text); font-weight:700; }
+
+.cross-sell{ border-top:1px solid var(--line); padding-top:22px; margin-top:6px; font-size:14px; line-height:1.6; color:var(--text-muted); }
+.cross-sell b{ color:var(--text); }
+
+.cta-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
+.contact-row{ margin-top:16px; font-size:13px; color:var(--text-muted); font-family:'IBM Plex Mono', monospace; }
+.contact-row a{ color:var(--accent-deep); text-decoration:none; }
+.contact-row a:hover{ text-decoration:underline; }
+.contact-row .dot{ margin:0 8px; color:var(--line); }
+
+.foot-actions{ display:flex; gap:12px; margin-top:34px; flex-wrap:wrap; }
+.copied-msg{ font-size:12.5px; color:var(--accent-deep); margin-top:10px; opacity:0; transition:opacity .2s; }
+.copied-msg.show{ opacity:1; }
+
+@media print{
+  .topbar, .score-rail, .btn-row, .foot-actions, .cta-actions{ display:none !important; }
+  body{ background:#fff; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="wordmark">SYNERGIA <span>PARTNERS</span></div>
+      <div class="topbar-tag">Revenue Enablement Health Check · Pillar 4 of 5</div>
+    </div>
+  </div>
+
+  <div class="score-rail">
+    <div class="score-rail-inner">
+      <div class="score-rail-label">Your score</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="score-dots" id="score-dots">
+          <div class="score-dot" data-i="0"></div>
+          <div class="score-dot" data-i="1"></div>
+          <div class="score-dot" data-i="2"></div>
+          <div class="score-dot" data-i="3"></div>
+          <div class="score-dot" data-i="4"></div>
+        </div>
+        <div class="score-rail-val mono" id="score-val">0 / 5</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="eyebrow">PILLAR 4 OF 5 · STANDALONE ASSESSMENT</div>
+    <h1 class="title">Revenue Enablement Health Check</h1>
+    <div class="category-badge">Sales & Revenue Enablement</div>
+    <p class="subhead">How repeatable, aligned, and trackable the path from pipeline to revenue really is.</p>
+
+    <div class="instructions">
+      <b>How to score:</b> For each capability below, mark whether it exists in your organization today. Each capability marked <b>"In place"</b> earns <b>1 point</b>, for a maximum possible score of <b>5</b>. This assessment is fully independent — you don't need the other four pillars to use it.
+    </div>
+
+    <div class="company-card">
+      <div class="company-card-title">Company Information</div>
+      <div class="field">
+        <label for="company-name">Company name (optional)</label>
+        <input type="text" id="company-name" placeholder="e.g. Acme Co." />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="industry">Industry</label>
+          <select id="industry">
+            <option value="" disabled selected>Select industry</option>
+            <option>Retail</option>
+            <option>Banking / Finance</option>
+            <option>Manufacturing</option>
+            <option>Hospitality</option>
+            <option>Food &amp; Beverage</option>
+            <option>Healthcare</option>
+            <option>Tech / SaaS</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="company-size">No. of employees</label>
+          <select id="company-size">
+            <option value="" disabled selected>Select company size</option>
+            <option>1–10</option>
+            <option>11–50</option>
+            <option>51–200</option>
+            <option>201–1000</option>
+            <option>1000+</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@company.com" />
+        <div class="field-hint">Used to follow up on your results. A copy of your report is shared with our team at Synergia Partners.</div>
+      </div>
+    </div>
+
+    <div class="cap-list" id="cap-list"></div>
+    <div class="nudge" id="nudge">Complete your company information and rate all 5 capabilities to see your results.</div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="see-results-btn">See My Results</button>
+    </div>
+
+    <div class="results" id="results">
+      <hr class="results-divider" />
+
+      <div class="score-hero">
+        <div class="score-hero-top">
+          <div class="score-big" id="hero-score">0<small> / 5</small></div>
+          <div class="band-chip" id="band-chip">FOUNDATIONAL</div>
+        </div>
+        <div class="band-desc" id="band-desc"></div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-title">Capability Breakdown</div>
+        <div id="breakdown-rows"></div>
+      </div>
+
+      <div class="wtm">
+        <div class="wtm-title">WHAT THAT MEANS</div>
+        <p class="wtm-intro">Based on your assessment results, focus on targeted initiatives that strengthen foundational gaps while accelerating areas with the highest growth potential.</p>
+        <div class="wtm-list">
+          <div class="wtm-item"><div class="wtm-num">1</div><div class="wtm-item-text"><b>Prioritize Critical Constraints.</b> Address the lowest-scoring capability areas that create the greatest impact on growth, efficiency, customer outcomes, or profitability.</div></div>
+          <div class="wtm-item"><div class="wtm-num">2</div><div class="wtm-item-text"><b>Define a 90-Day Action Plan.</b> Establish clear objectives, owners, milestones, and success measures for priority initiatives.</div></div>
+          <div class="wtm-item"><div class="wtm-num">3</div><div class="wtm-item-text"><b>Build Cross-Functional Alignment.</b> Align leadership, operational teams, and supporting functions around common goals and decision-making frameworks.</div></div>
+          <div class="wtm-item"><div class="wtm-num">4</div><div class="wtm-item-text"><b>Implement Measurement &amp; Governance.</b> Introduce performance indicators, reporting cadence, and accountability structures to sustain progress.</div></div>
+          <div class="wtm-item"><div class="wtm-num">5</div><div class="wtm-item-text"><b>Reassess &amp; Scale.</b> Conduct a follow-up maturity review to measure advancement and identify the next wave of opportunities.</div></div>
+        </div>
+        <div class="cross-sell">
+          At Synergia Partners, we offer a range of services across 5 critical drivers of success. Want to assess your organization's readiness across all 5 Pillars of Service (<b>Leadership, Finance, Customer Experience, Revenue &amp; Data</b>)? Check out our <b>Growth Readiness Index</b> for a comprehensive view.
+        </div>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="https://calendly.com/gosynergia/30min" target="_blank" rel="noopener noreferrer">Schedule a Growth Review</a>
+        </div>
+        <div class="contact-row">
+          <a href="mailto:info@gosynergia.com">info@gosynergia.com</a><span class="dot">·</span><a href="https://www.gosynergia.com" target="_blank" rel="noopener noreferrer">www.gosynergia.com</a>
+        </div>
+      </div>
+
+      <div class="foot-actions">
+        <button class="btn btn-ghost" id="copy-btn">Copy summary</button>
+        <button class="btn btn-ghost" id="restart-btn">Restart assessment</button>
+        <button class="btn btn-ghost" id="print-btn">Print results</button>
+      </div>
+      <div class="copied-msg" id="copied-msg">Summary copied to clipboard.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ====================== DATA ====================== */
+const ASSESSMENT_NAME = "Revenue Enablement Health Check";
+const CATEGORY = "Sales & Revenue Enablement";
+const PILLAR_NUM = 4;
+const CAPABILITIES = ["The sales process is standardized and repeatable", "Marketing, sales, and customer success are aligned and coordinated", "Pipeline visibility and forecasting are accurate", "Sales tools and CRM systems are used effectively", "Revenue growth strategy is executed and tracked against goals"];
+
+/* Paste your deployed Google Apps Script Web App URL below to enable
+   automatic lead logging + emailing a copy of each report to
+   info@gosynergia.com. Until this is set, results still work locally,
+   but nothing is sent anywhere. See setup instructions provided
+   alongside this file. */
+const BACKEND_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+const BANDS = [
+  { min:0, max:1, label:'FOUNDATIONAL', color:'var(--band-foundational)', desc:"Capability is limited or inconsistent; activities are largely manual, reactive, or managed ad hoc." },
+  { min:2, max:3, label:'SCALING', color:'var(--band-scaling)', desc:"Processes are established and repeatable, delivering operational efficiency and emerging strategic value." },
+  { min:4, max:5, label:'OPTIMIZED', color:'var(--band-optimized)', desc:"Capabilities are fully embedded, integrated across functions, and actively driving strategic growth." }
+];
+
+/* ====================== STATE ====================== */
+const state = { answers: Array(CAPABILITIES.length).fill(null), companyName:'', industry:'', companySize:'', email:'', submitted:false };
+
+function esc(s){ return (s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v||''); }
+
+/* ====================== RENDER CAPABILITY LIST ====================== */
+function renderCapList(){
+  const list = document.getElementById('cap-list');
+  list.innerHTML = CAPABILITIES.map((c,i) => `
+    <div class="cap-card">
+      <div class="cap-top">
+        <div class="cap-num">${i+1}</div>
+        <div class="cap-text">${esc(c)}</div>
+      </div>
+      <div class="cap-toggle">
+        <button class="toggle-btn ${state.answers[i]===0?'active-no':''}" data-i="${i}" data-v="0">Not yet in place</button>
+        <button class="toggle-btn ${state.answers[i]===1?'active-yes':''}" data-i="${i}" data-v="1">In place</button>
+      </div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = parseInt(btn.dataset.i,10);
+      const v = parseInt(btn.dataset.v,10);
+      state.answers[i] = v;
+      document.getElementById('nudge').classList.remove('show');
+      renderCapList();
+      updateScoreRail();
+    });
+  });
+}
+
+function updateScoreRail(){
+  const answered = state.answers.filter(a => a !== null);
+  const score = state.answers.reduce((s,a) => s + (a === 1 ? 1 : 0), 0);
+  document.getElementById('score-val').textContent = `${score} / ${CAPABILITIES.length}`;
+  document.querySelectorAll('.score-dot').forEach((dot,i) => {
+    dot.classList.toggle('on', state.answers[i] === 1);
+  });
+}
+
+function allAnswered(){ return state.answers.every(a => a !== null); }
+function companyInfoComplete(){ return !!state.industry && !!state.companySize && isValidEmail(state.email); }
+function missingFieldsMessage(){
+  const missing = [];
+  if(!state.industry) missing.push('Industry');
+  if(!state.companySize) missing.push('No. of employees');
+  if(!isValidEmail(state.email)) missing.push('a valid email');
+  if(!allAnswered()) missing.push('all 5 capability ratings');
+  if(missing.length === 0) return '';
+  return `Please complete: ${missing.join(', ')}.`;
+}
+
+function getBand(score){
+  return BANDS.find(b => score >= b.min && score <= b.max) || BANDS[0];
+}
+
+function renderResults(){
+  const score = state.answers.reduce((s,a) => s + (a === 1 ? 1 : 0), 0);
+  const band = getBand(score);
+
+  document.getElementById('hero-score').innerHTML = `${score}<small> / ${CAPABILITIES.length}</small>`;
+  const chip = document.getElementById('band-chip');
+  chip.textContent = band.label;
+  chip.style.background = band.color;
+  chip.style.color = '#fff';
+  document.getElementById('band-desc').textContent = band.desc;
+
+  const rows = CAPABILITIES.map((c,i) => {
+    const yes = state.answers[i] === 1;
+    return `<div class="breakdown-row">
+      <div class="bd-icon ${yes?'bd-yes':'bd-no'}">${yes?'✓':'–'}</div>
+      <div class="bd-text ${yes?'':'muted'}">${esc(c)}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('breakdown-rows').innerHTML = rows;
+
+  document.getElementById('results').classList.add('show');
+}
+
+function buildSummaryText(){
+  const score = state.answers.reduce((s,a) => s + (a === 1 ? 1 : 0), 0);
+  const band = getBand(score);
+  const org = state.companyName ? `${state.companyName} — ` : '';
+  let lines = [];
+  lines.push(`${org}${ASSESSMENT_NAME}`);
+  lines.push(`Synergia Partners · ${CATEGORY} · Pillar ${PILLAR_NUM} of 5`);
+  lines.push('');
+  lines.push(`Industry: ${state.industry || '—'}`);
+  lines.push(`Company size: ${state.companySize || '—'}`);
+  lines.push(`Email: ${state.email || '—'}`);
+  lines.push('');
+  lines.push(`Score: ${score} / ${CAPABILITIES.length} — ${band.label}`);
+  lines.push(band.desc);
+  lines.push('');
+  lines.push('Capability Breakdown:');
+  CAPABILITIES.forEach((c,i) => {
+    lines.push(`  [${state.answers[i]===1?'x':' '}] ${c}`);
+  });
+  lines.push('');
+  lines.push('Want the full picture? Synergia Partners\' Growth Readiness Index assesses all 5 Pillars of Service (Leadership, Finance, Customer Experience, Revenue & Data). info@gosynergia.com · www.gosynergia.com');
+  return lines.join('\n');
+}
+
+function submitReport(score, band){
+  if(state.submitted) return;
+  if(!BACKEND_URL || BACKEND_URL.indexOf('PASTE_YOUR') === 0){
+    console.warn('BACKEND_URL not configured — report was not sent to info@gosynergia.com.');
+    return;
+  }
+  const payload = {
+    timestamp: new Date().toISOString(),
+    assessmentName: ASSESSMENT_NAME,
+    category: CATEGORY,
+    pillarNum: PILLAR_NUM,
+    companyName: state.companyName,
+    industry: state.industry,
+    companySize: state.companySize,
+    email: state.email,
+    score: score,
+    maxScore: CAPABILITIES.length,
+    band: band.label,
+    capabilities: CAPABILITIES.map((c,i) => ({ text:c, inPlace: state.answers[i]===1 })),
+    reportText: buildSummaryText()
+  };
+  fetch(BACKEND_URL, {
+    method:'POST',
+    mode:'no-cors',
+    headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).catch(err => console.error('Report submission failed', err));
+  state.submitted = true;
+}
+
+/* ====================== EVENTS ====================== */
+document.getElementById('company-name').addEventListener('input', (e) => { state.companyName = e.target.value; });
+document.getElementById('industry').addEventListener('change', (e) => { state.industry = e.target.value; document.getElementById('nudge').classList.remove('show'); });
+document.getElementById('company-size').addEventListener('change', (e) => { state.companySize = e.target.value; document.getElementById('nudge').classList.remove('show'); });
+document.getElementById('email').addEventListener('input', (e) => { state.email = e.target.value; document.getElementById('nudge').classList.remove('show'); });
+
+document.getElementById('see-results-btn').addEventListener('click', () => {
+  if(!allAnswered() || !companyInfoComplete()){
+    const nudge = document.getElementById('nudge');
+    nudge.textContent = missingFieldsMessage();
+    nudge.classList.add('show');
+    return;
+  }
+  const score = state.answers.reduce((s,a) => s + (a === 1 ? 1 : 0), 0);
+  const band = getBand(score);
+  renderResults();
+  submitReport(score, band);
+  document.getElementById('results').scrollIntoView({ behavior:'smooth', block:'start' });
+});
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  state.answers = Array(CAPABILITIES.length).fill(null);
+  state.companyName = ''; state.industry = ''; state.companySize = ''; state.email = ''; state.submitted = false;
+  document.getElementById('company-name').value = '';
+  document.getElementById('industry').selectedIndex = 0;
+  document.getElementById('company-size').selectedIndex = 0;
+  document.getElementById('email').value = '';
+  document.getElementById('results').classList.remove('show');
+  renderCapList();
+  updateScoreRail();
+  window.scrollTo({ top:0, behavior:'smooth' });
+});
+
+document.getElementById('copy-btn').addEventListener('click', async () => {
+  try{
+    await navigator.clipboard.writeText(buildSummaryText());
+    const msg = document.getElementById('copied-msg');
+    msg.classList.add('show');
+    setTimeout(() => msg.classList.remove('show'), 2200);
+  }catch(e){ console.error('Copy failed', e); }
+});
+
+document.getElementById('print-btn').addEventListener('click', () => window.print());
+
+/* ====================== INIT ====================== */
+renderCapList();
+updateScoreRail();
+</script>
+</body>
+</html>
