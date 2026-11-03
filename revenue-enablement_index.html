@@ -279,13 +279,14 @@ h1.title{ font-size:34px; line-height:1.12; margin-bottom:14px; }
           <div class="wtm-item"><div class="wtm-num">5</div><div class="wtm-item-text"><b>Reassess &amp; Scale.</b> Conduct a follow-up maturity review to measure advancement and identify the next wave of opportunities.</div></div>
         </div>
         <div class="cross-sell">
-          At Synergia Partners, we offer a range of services across 5 critical drivers of success. Want to assess your organization's readiness across all 5 Pillars of Service (<b>Leadership, Finance, Customer Experience, Revenue &amp; Data</b>)? Check out our <b>Growth Readiness Index</b> for a comprehensive view.
+          At Synergia Partners, we offer a range of services across 5 critical drivers of success. Want to assess your organization's readiness across all 5 Pillars of Service (<b>Leadership, Finance, Customer Experience, Revenue &amp; Data</b>)? Check out our <a href="https://synergiapartners1.github.io/GRI/" target="_blank" rel="noopener noreferrer"><b>Growth Readiness Index</b></a> for a comprehensive view.
         </div>
         <div class="cta-actions">
           <a class="btn btn-primary" href="https://calendly.com/gosynergia/30min" target="_blank" rel="noopener noreferrer">Schedule a Growth Review</a>
+          <a class="btn btn-ghost" href="https://synergiapartners1.github.io/GRI/" target="_blank" rel="noopener noreferrer">Take the Growth Readiness Index</a>
         </div>
         <div class="contact-row">
-          <a href="mailto:info@gosynergia.com">info@gosynergia.com</a><span class="dot">·</span><a href="https://www.gosynergia.com" target="_blank" rel="noopener noreferrer">www.gosynergia.com</a>
+          <a href="mailto:info@gosynergia.com">info@gosynergia.com</a><span class="dot">·</span><a href="https://www.gosynergia.com" target="_blank" rel="noopener noreferrer">www.gosynergia.com</a><span class="dot">·</span><a href="https://synergiapartners1.github.io/GRI/" target="_blank" rel="noopener noreferrer">synergiapartners1.github.io/GRI</a>
         </div>
       </div>
 
@@ -306,12 +307,20 @@ const CATEGORY = "Sales & Revenue Enablement";
 const PILLAR_NUM = 4;
 const CAPABILITIES = ["The sales process is standardized and repeatable", "Marketing, sales, and customer success are aligned and coordinated", "Pipeline visibility and forecasting are accurate", "Sales tools and CRM systems are used effectively", "Revenue growth strategy is executed and tracked against goals"];
 
-/* Paste your deployed Google Apps Script Web App URL below to enable
+/* ====================================================================
+   REQUIRED SETUP — READ THIS:
+   Paste your deployed Google Apps Script Web App URL below to enable
    automatic lead logging + emailing a copy of each report to
-   info@gosynergia.com. Until this is set, results still work locally,
-   but nothing is sent anywhere. See setup instructions provided
-   alongside this file. */
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyQiplXM_aNZROU4uFkFRXDBNj_G04wAGRpg1EQzgVS8_Wn5r1K5IMnH6lG9jRE2sci/exec';
+   info@gosynergia.com. Until this exact placeholder text is replaced,
+   this assessment keeps working perfectly for the visitor (they still
+   see their score and results), but NOTHING is sent to your
+   spreadsheet or inbox — that failure is silent, with no on-screen
+   error. This was the cause of missing leads previously.
+   Get the URL by deploying synergia-pillar-assessments-backend.gs as
+   a Web App (see "Pillar Assessments — Fix Summary & Setup Guide").
+   This same URL must be pasted into ALL 5 assessment HTML files.
+   ==================================================================== */
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzseopYhzVF1nwAaNyvmGBRXBrVkL0orUD_XNgr6XZND4n8lkGp9hhocY6cZMR2s4sY/exec';
 
 const BANDS = [
   { min:0, max:1, label:'FOUNDATIONAL', color:'var(--band-foundational)', desc:"Capability is limited or inconsistent; activities are largely manual, reactive, or managed ad hoc." },
@@ -421,7 +430,8 @@ function buildSummaryText(){
     lines.push(`  [${state.answers[i]===1?'x':' '}] ${c}`);
   });
   lines.push('');
-  lines.push('Want the full picture? Synergia Partners\' Growth Readiness Index assesses all 5 Pillars of Service (Leadership, Finance, Customer Experience, Revenue & Data). info@gosynergia.com · www.gosynergia.com');
+  lines.push('Want the full picture? Synergia Partners\' Growth Readiness Index assesses all 5 Pillars of Service (Leadership, Finance, Customer Experience, Revenue & Data): https://synergiapartners1.github.io/GRI/');
+  lines.push('info@gosynergia.com · www.gosynergia.com');
   return lines.join('\n');
 }
 
